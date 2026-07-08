@@ -1,1 +1,1 @@
-python -m pytest tests/ -v
+SKIP_API_TESTS=1 python -m pytest tests/ -v

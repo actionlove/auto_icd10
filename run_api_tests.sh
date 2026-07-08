@@ -1,0 +1,1 @@
+python -m pytest tests/providers/ -v

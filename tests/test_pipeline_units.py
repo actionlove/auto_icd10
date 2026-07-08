@@ -8,12 +8,9 @@ Run: python -m pytest tests/test_pipeline_units.py -v
 """
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from icd10_pipeline.pipeline import ICD10Pipeline
 from icd10_pipeline.providers.base import LLMProvider
