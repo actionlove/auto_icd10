@@ -32,8 +32,18 @@ $ echo "OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxx
 OPENAI_MODEL=gpt-4o-mini" > .env
 ```
 
-3. Run unitest
+3. Run unitest to confirm setup correctly
 ```
 $ source run_tests.sh
 $ source run_api_tests.sh
 ```
+
+4. Run demo locally
+```
+$ python app.py
+```
+Once you see message:
+```
+* Running on local URL:  http://127.0.0.1:7860
+```
+Open web browser with URL http://127.0.0.1:7860 to interact with the demo.
