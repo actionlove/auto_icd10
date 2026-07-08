@@ -43,16 +43,16 @@ class ICD10Pipeline:
         self.top_k = top_k
 
     def separate(self, transcript: str) -> str:
-        """Separate raw transcript into patient/doctor dialog."""
+        """Stage 0: Separate raw transcript into patient/doctor dialog."""
         out = self.provider.complete(DIALOG_PROMPT.format(transcript=transcript))
         return out
 
-    def extract(self, transcript: str) -> list[dict]:
-        """Stage 1: separate raw transcript into patient/doctor dialog, then extract diagnoses + evidence from dialog."""
-        dialog = self.separate(transcript)
+    def extract(self, dialog: str) -> list[dict]:
+        """Stage 1: Extract diagnoses + evidence from dialog."""
         out = self.provider.complete(EXTRACT_PROMPT.format(transcript=dialog))
         data = extract_json(out) or {}
-        return data.get("problem_list", []), dialog
+        print(f"extracted json data: {data}")
+        return data.get("problem_list", [])
 
     def retrieve(self, problem_list: list[dict]) -> list[dict]:
         """Stage 2: BM25 recall over the official ICD-10-CM table."""
@@ -94,7 +94,8 @@ class ICD10Pipeline:
         return preds
 
     def run(self, transcript: str) -> PipelineResult:
-        problem_list, dialog = self.extract(transcript)
+        dialog = self.separate(transcript)
+        problem_list = self.extract(dialog)
         candidates = self.retrieve(problem_list)
         predictions = self.verify(dialog, problem_list, candidates) if candidates else []
-        return PipelineResult(diagnoses=problem_list, candidates=candidates, predictions=predictions)
+        return PipelineResult(problem_list=problem_list, candidates=candidates, predictions=predictions)

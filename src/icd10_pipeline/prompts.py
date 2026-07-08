@@ -27,28 +27,28 @@ You will receive one visit transcript:
 
 Return ONLY a valid JSON object — no markdown fences, no commentary — with exactly this schema:
 
-{
+{{
   "subjective": "<patient-reported symptoms, history, and concerns, in concise clinical prose>",
   "objective": "<exam findings, vitals, and test results explicitly stated in the transcript; write 'Not documented' if none>",
   "assessment": "<the clinician's stated impressions/diagnoses for this visit, in concise clinical prose>",
   "plan": "<treatments, medication changes, referrals, follow-up explicitly stated>",
   "problem_list": [
-    {
+    {{
       "term": "<condition exactly as expressed in the transcript>",
       "normalized_term": "<standard clinical terminology, maximally specific, e.g. 'acute exacerbation of chronic obstructive pulmonary disease'>",
       "status": "confirmed | suspected | history | chronic_active | ruled_out",
-      "attributes": {
+      "attributes": {{
         "acuity": "acute | chronic | acute_on_chronic | null",
         "laterality": "left | right | bilateral | null",
         "severity": "<as stated, e.g. 'mild', or null>",
         "causal_link": "<'due to X' relationships explicitly stated, or null>"
-      },
+      }},
       "evidence": "<short verbatim quote from the transcript supporting this problem>",
       "addressed_this_visit": true | false
-    }
+    }}
   ],
   "ambiguities": ["<anything genuinely unclear in the transcript that a human coder should review; empty list if none>"]
-}
+}}
  
 ## CONTENT RULES
  
