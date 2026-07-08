@@ -27,6 +27,7 @@ class CodePrediction:
 
 @dataclass
 class PipelineResult:
+    dialog: str = field(default_factory=str)
     problem_list: list[dict] = field(default_factory=list)
     candidates: list[dict] = field(default_factory=list)
     predictions: list[CodePrediction] = field(default_factory=list)
@@ -98,4 +99,4 @@ class ICD10Pipeline:
         problem_list = self.extract(dialog)
         candidates = self.retrieve(problem_list)
         predictions = self.verify(dialog, problem_list, candidates) if candidates else []
-        return PipelineResult(problem_list=problem_list, candidates=candidates, predictions=predictions)
+        return PipelineResult(dialog=dialog, problem_list=problem_list, candidates=candidates, predictions=predictions)

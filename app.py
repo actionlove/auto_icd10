@@ -57,7 +57,7 @@ def predict(transcript: str, provider_name: str, model_override: str):
         f"{len(result.predictions)} final codes."
     )
     debug = json.dumps(
-        {"diagnoses": result.problem_list, "candidates": result.candidates[:20]},
+        {"dialog": result.dialog, "diagnoses": result.problem_list, "candidates": result.candidates[:20]},
         indent=2,
         ensure_ascii=False,
     )
