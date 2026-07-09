@@ -1,12 +1,23 @@
 """Prompt templates. Keep all prompts here so they are easy to iterate on."""
 
 
-DIALOG_PROMPT = """You will be given a transcript between doctor and patient in the clinic. Unfortunately, \
-the transcript does not separate sentences from the doctor and from the patient. They all mix together. \
-Your task is to infer from the input text sentences from the doctor and from the patient respectively. \
-Then generate output conversation text with format: "Patient: ...\nDoctor: ...\n ..." \
+DIALOG_PROMPT = """You will be given a transcript between doctor and patient in the clinic, \
+sometimes there might be the 3rd person (interpreter, or relative of the patient). Unfortunately, \
+the transcript does not separate sentences from different speakers. They all mix together. \
+Your task is to infer from the input interleaved transcript text: \
+1. How many speakers in the transcript and who are they? (doctor, patient ...)
+2. Separate speech sentences from different speakers, i.e., generate speaker diarization output.
 
-Transcript:
+## Note
+1. Do not output you answer about question 1 (how many speakers), just output the answer to question 2. That is, you answer should be strictly in the following format:
+Patient: ...
+Doctor: ...
+Patient: ...
+Doctor: ...
+2. Do not put any "*" surrounding the speaker labels.
+3. If a line is ambiguous, infer the most likely speaker from the surrounding context while preserving the original meaning.
+
+## Transcript
 ---
 {transcript}
 ---"""
