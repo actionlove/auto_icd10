@@ -13,7 +13,7 @@ class OpenAIProvider(LLMProvider):
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
         self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
 
-    def complete(self, prompt: str, max_tokens: int = 2000) -> str:
+    def complete(self, prompt: str, max_tokens: int = 16384) -> str:
         resp = self.client.chat.completions.create(
             model=self.model,
             max_tokens=max_tokens,

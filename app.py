@@ -11,6 +11,7 @@ On HF Spaces: this file is the Space entrypoint (sdk: gradio).
 import json
 from pathlib import Path
 
+import pandas as pd
 import gradio as gr
 from dotenv import load_dotenv
 
@@ -33,6 +34,20 @@ EXAMPLE = (
     "infection. Your blood pressure is also high again, 152/94 — you're on "
     "lisinopril for your hypertension, so let's increase the dose."
 )
+
+
+DEV_SAMPLE_SET_PATH = Path(__file__).parent / "data" / "Test_Project_ICD10_Dataset.csv"
+DEV_SAMPLE_SET = pd.read_csv(DEV_SAMPLE_SET_PATH)
+NUM_DEMO_SAMPLES = 10
+DEV_SAMPLE_LIST = DEV_SAMPLE_SET["transcript"][:NUM_DEMO_SAMPLES].tolist()
+NEXT_DEMO_SAMPLE_IDX = 0
+def fill_with_next_sample() -> str:
+    global NEXT_DEMO_SAMPLE_IDX
+    if NEXT_DEMO_SAMPLE_IDX >= len(DEV_SAMPLE_LIST):
+        NEXT_DEMO_SAMPLE_IDX = 0
+    sample = DEV_SAMPLE_LIST[NEXT_DEMO_SAMPLE_IDX]
+    NEXT_DEMO_SAMPLE_IDX += 1
+    return sample
 
 
 def predict(transcript: str, provider_name: str, model_override: str):
@@ -74,13 +89,21 @@ with gr.Blocks(title="ICD-10 Prediction Demo") as demo:
     with gr.Row():
         provider = gr.Dropdown(choices=list(PROVIDERS), value="openai", label="Provider")
         model = gr.Textbox(label="Model override (optional)", placeholder="e.g. gpt-4o-mini")
+
     transcript = gr.Textbox(lines=12, label="Doctor-patient raw transcript", value=EXAMPLE)
-    btn = gr.Button("Predict ICD-10 codes", variant="primary")
+
+    with gr.Row():
+        btn_next = gr.Button("Next demo sample", variant="primary")
+        btn_pred = gr.Button("Predict ICD-10 codes", variant="primary")
+
     summary = gr.Markdown()
     output = gr.Dataframe(headers=["Code", "Description", "Confidence", "Evidence"], label="Predicted codes")
     with gr.Accordion("Pipeline debug (extraction + candidates)", open=False):
         debug = gr.Code(language="json")
-    btn.click(predict, inputs=[transcript, provider, model], outputs=[output, summary, debug])
+
+    btn_next.click(fn=fill_with_next_sample, outputs=transcript)
+    btn_pred.click(predict, inputs=[transcript, provider, model], outputs=[output, summary, debug])
+
 
 if __name__ == "__main__":
     demo.launch()
