@@ -52,7 +52,6 @@ class ICD10Pipeline:
         """Stage 1: Extract diagnoses + evidence from dialog."""
         out = self.provider.complete(EXTRACT_PROMPT.format(transcript=dialog))
         data = extract_json(out) or {}
-        print(f"extracted json data: {data}")
         return data.get("problem_list", [])
 
     def retrieve(self, problem_list: list[dict]) -> list[dict]:

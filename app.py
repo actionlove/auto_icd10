@@ -20,7 +20,7 @@ from icd10_pipeline.retrieval import ICD10Index  # noqa: E402
 
 load_dotenv()
 
-CODE_TABLE = Path(__file__).parent / "data" / "icd10cm_codes_sample.csv"
+CODE_TABLE = Path(__file__).parent / "data" / "icd10cm_codes_full.csv"
 INDEX = ICD10Index(CODE_TABLE)
 _PROVIDER_CACHE: dict[str, object] = {}
 
