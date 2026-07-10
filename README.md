@@ -47,3 +47,8 @@ Once you see message:
 * Running on local URL:  http://127.0.0.1:7860
 ```
 Open web browser with URL http://127.0.0.1:7860 to interact with the demo.
+
+5. Run benchmark locally
+```
+$ python scripts/benchmark.py --provider openai --test-set data/Test_Project_ICD10_Dataset.csv --limit 10
+```
