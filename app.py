@@ -227,15 +227,11 @@ with gr.Blocks(title="ICD-10 Prediction Demo") as demo:
 
         step2_btn = gr.Button("Step 2 — Extract diagnoses", variant="primary")
         step2_status = gr.Markdown()
-        # step2_out = gr.Code(label="Step 2 output — diagnoses JSON (editable)",
-        #                     language="json", interactive=True)
         step2_out = gr.Textbox(label="Step 2 output — diagnoses JSON (editable)",
                                interactive=True)
 
         step3_btn = gr.Button("Step 3 — Retrieve candidate codes", variant="primary")
         step3_status = gr.Markdown()
-        # step3_out = gr.Code(label="Step 3 output — candidates JSON (editable)",
-        #                     language="json", interactive=True)
         step3_out = gr.Textbox(label="Step 3 output — candidates JSON (editable)",
                                interactive=True)
 

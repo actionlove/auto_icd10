@@ -58,7 +58,12 @@ class ICD10Pipeline:
         """Stage 2: BM25 recall over the official ICD-10-CM table."""
         candidates: dict[str, dict] = {}
         for problem in problem_list:
-            query = problem.get("normalized_term") or problem.get("term", "")
+            term = problem.get("normalized_term") or problem.get("term", "")
+            status = problem.get("status", "")
+            attributes = problem.get("attributes", {})
+            acuity = attributes.get("acuity", "")
+            laterality = attributes.get("laterality", "")
+            query = f"{term} {status} {acuity} {laterality}".strip()
             for code, desc, score in self.index.search(query, k=self.top_k):
                 if code not in candidates or score > candidates[code]["score"]:
                     candidates[code] = {
