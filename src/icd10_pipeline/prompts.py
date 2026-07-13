@@ -111,3 +111,41 @@ Extracted diagnoses:
 
 Candidate ICD-10-CM codes:
 {candidates}"""
+
+
+CONFIDENCE_PROMPT = """You task is to judge whether the ICD-10-CM candidate code and the diagnoses result are grounded at the doctor/patient dialog transcript and faithfully derived from the doctor's endorsement only.
+The transcript is under the following format:
+Patient: ...
+Doctor: ...
+Patient: ...
+Doctor: …
+The diagnose result is under the following JSON format:
+{{
+      "term": "<condition exactly as expressed in the transcript>",
+      "normalized_term": "<standard clinical terminology, maximally specific, e.g. 'acute exacerbation of chronic obstructive pulmonary disease'>",
+      "status": "confirmed | suspected | history | chronic_active | ruled_out",
+      "attributes": {{
+         "acuity": "acute | chronic | acute_on_chronic | null",
+         "laterality": "left | right | bilateral | null",
+         "severity": "<as stated, e.g. 'mild', or null>",
+         "causal_link": "<'due to X' relationships explicitly stated, or null>"
+     }},
+     "evidence": "<short verbatim quote from the transcript supporting this problem>",
+     "addressed_this_visit": true | false
+}}
+The ICD-10-CM candidate code has the following format:
+{{
+    "code": "<code from candidate list>",
+    "confidence": <0.0-1.0>,
+    "evidence": "<verbatim transcript quote supporting this code>"
+}}
+Note that the answer can only be "yes" or "no" (all in lowercase).
+
+Transcript:
+{transcript}
+
+Extracted diagnoses:
+{diagnoses}
+
+ICD-10-CM code:
+{candidate}"""

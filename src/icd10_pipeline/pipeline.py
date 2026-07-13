@@ -12,7 +12,7 @@ import json
 from dataclasses import dataclass, field
 
 from .parsing import extract_json
-from .prompts import DIALOG_PROMPT, EXTRACT_PROMPT, VERIFY_PROMPT
+from .prompts import DIALOG_PROMPT, EXTRACT_PROMPT, VERIFY_PROMPT, CONFIDENCE_PROMPT
 from .providers.base import LLMProvider
 from .retrieval import ICD10Index
 
@@ -92,11 +92,18 @@ class ICD10Pipeline:
                 CodePrediction(
                     code=code,
                     description=valid_codes[code],
-                    confidence=float(item.get("confidence", 0.0)),
+                    confidence=self.compute_confidence(transcript, problem_list, item),  # float(item.get("confidence", 0.0)),
                     evidence=str(item.get("evidence", "")),
                 )
             )
         return preds
+
+    def compute_confidence(self, transcript: str, problem_list: list[dict], code_item: dict) -> float:
+        conf = self.provider.confidence(
+            CONFIDENCE_PROMPT.format(transcript=transcript, diagnoses=problem_list, candidate=code_item)
+        )
+        print(f"Code: {code_item['code']} | conf: {conf}")
+        return conf
 
     def run(self, transcript: str) -> PipelineResult:
         dialog = self.separate(transcript)
